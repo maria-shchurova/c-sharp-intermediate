@@ -1,8 +1,5 @@
-using HelloWorld.Models;
 using Microsoft.Data.SqlClient;
-using System;
 using System.Data;
-using System.Collections.Generic;
 using Dapper;
 
 namespace HelloWorld.Data
