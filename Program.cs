@@ -19,7 +19,7 @@ namespace HelloWorld // Note: actual namespace depends on the project name.
             DateTime rightNow = dbConnection.QuerySingle<DateTime>(sqlCommand);
 
             Console.WriteLine(rightNow);
-            
+
             Computer myComputer = new Computer()
             {
                 Motherboard = "RIJND1111",
@@ -29,6 +29,27 @@ namespace HelloWorld // Note: actual namespace depends on the project name.
                 Price = 999.67m,
                 VideoCard = "GTX1040"
             };
+
+            string sql = @"INSERT INTO TutorialAppSchema.Computer (
+                Motherboard,
+                HasWifi,
+                HasLTE,
+                ReleaseData,
+                Price,
+                VideoCard
+            ) VALUES ('" + myComputer.Motherboard 
+                        +  "' , '" + myComputer.HasWifi
+                         +  "' , '" + myComputer.HasLTE
+                          +  "' , '" + myComputer.ReleaseData
+                           +  "' , '" + myComputer.Price
+                            +  "' , '" + myComputer.VideoCard
+            + "')";
+
+            Console.WriteLine(sql);
+
+            int result = dbConnection.Execute(sql);
+            Console.WriteLine(result);
+
         }
     }
 }
