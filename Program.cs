@@ -25,7 +25,7 @@ namespace HelloWorld // Note: actual namespace depends on the project name.
                 Motherboard = "RIJND1111",
                 HasWifi = true,
                 HasLTE = false,
-                ReleaseData = DateTime.Now,
+                ReleaseDate = DateTime.Now,
                 Price = 999.67m,
                 VideoCard = "GTX1040"
             };
@@ -40,7 +40,7 @@ namespace HelloWorld // Note: actual namespace depends on the project name.
             ) VALUES ('" + myComputer.Motherboard 
                         +  "' , '" + myComputer.HasWifi
                          +  "' , '" + myComputer.HasLTE
-                          +  "' , '" + myComputer.ReleaseData
+                          +  "' , '" + myComputer.ReleaseDate
                            +  "' , '" + myComputer.Price
                             +  "' , '" + myComputer.VideoCard
             + "')";
