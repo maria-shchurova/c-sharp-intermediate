@@ -14,12 +14,6 @@ namespace HelloWorld // Note: actual namespace depends on the project name.
 
             IDbConnection dbConnection = new SqlConnection(connectionString);
 
-            string sqlCommand = "SELECT GETDATE()";
-
-            DateTime rightNow = dbConnection.QuerySingle<DateTime>(sqlCommand);
-
-            Console.WriteLine(rightNow);
-
             Computer myComputer = new Computer()
             {
                 Motherboard = "RIJND1111",
@@ -34,7 +28,7 @@ namespace HelloWorld // Note: actual namespace depends on the project name.
                 Motherboard,
                 HasWifi,
                 HasLTE,
-                ReleaseData,
+                ReleaseDate,
                 Price,
                 VideoCard
             ) VALUES ('" + myComputer.Motherboard 
@@ -44,12 +38,30 @@ namespace HelloWorld // Note: actual namespace depends on the project name.
                            +  "' , '" + myComputer.Price
                             +  "' , '" + myComputer.VideoCard
             + "')";
+            
+            dbConnection.Execute(sql);
 
-            Console.WriteLine(sql);
 
-            int result = dbConnection.Execute(sql);
-            Console.WriteLine(result);
+            string sqlSelect = @"SELECT 
+                Computer.Motherboard,
+                Computer.HasWifi,
+                Computer.HasLTE,
+                Computer.ReleaseDate,
+                Computer.Price,
+                Computer.VideoCard   
+                FROM TutorialAppSchema.Computer";
+            IEnumerable<Computer> computers = dbConnection.Query<Computer>(sqlSelect);
 
+            foreach(Computer singleComputer in computers)
+            {
+                Console.WriteLine("'" + myComputer.Motherboard 
+                        +  "' , '" + myComputer.HasWifi
+                         +  "' , '" + myComputer.HasLTE
+                          +  "' , '" + myComputer.ReleaseDate
+                           +  "' , '" + myComputer.Price
+                            +  "' , '" + myComputer.VideoCard
+            + "'");
+            }
         }
     }
 }
