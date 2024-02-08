@@ -3,6 +3,7 @@ using System.Data;
 using Dapper;
 using HelloWorld.Models;
 using Microsoft.Data.SqlClient;
+using HelloWorld.Data;
 
 namespace HelloWorld // Note: actual namespace depends on the project name.
 {
@@ -10,9 +11,8 @@ namespace HelloWorld // Note: actual namespace depends on the project name.
     {
         static void Main(string[] args)
         {
-            string connectionString = "Server=localhost;Database=DotNetCourseDatabase;TrustServerCertificate=true;Trusted_Connection=true;"; 
-
-            IDbConnection dbConnection = new SqlConnection(connectionString);
+            DataContextDapper dapper = new DataContextDapper();
+            DateTime rightNow = dapper.LoadDataSingle<DateTime>("SELECT GETDATE()");
 
             Computer myComputer = new Computer()
             {
@@ -39,7 +39,7 @@ namespace HelloWorld // Note: actual namespace depends on the project name.
                             +  "' , '" + myComputer.VideoCard
             + "')";
             
-            dbConnection.Execute(sql);
+            bool result = dapper.ExecuteSql(sql);
 
 
             string sqlSelect = @"SELECT 
@@ -50,7 +50,7 @@ namespace HelloWorld // Note: actual namespace depends on the project name.
                 Computer.Price,
                 Computer.VideoCard   
                 FROM TutorialAppSchema.Computer";
-            IEnumerable<Computer> computers = dbConnection.Query<Computer>(sqlSelect);
+            IEnumerable<Computer> computers = dapper.LoadData<Computer>(sqlSelect);
 
             foreach(Computer singleComputer in computers)
             {
