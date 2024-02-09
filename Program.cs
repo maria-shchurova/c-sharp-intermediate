@@ -40,36 +40,17 @@ namespace HelloWorld
             // openFile.Close();
 
             string computersJSON = File.ReadAllText("ComputersSnake.json");
-            Mapper mapper = new Mapper(new MapperConfiguration((cfg) => {
-                cfg.CreateMap<ComputerSnake, Computer>()
-                    .ForMember(destination => destination.ComputerId, options=>
-                        options.MapFrom(source=>source.computer_id))
-                    .ForMember(destination => destination.CPUCores, options=>
-                        options.MapFrom(source=>source.cpu_cores))
-                    .ForMember(destination => destination.HasWifi, options=>
-                        options.MapFrom(source=>source.has_wifi))
-                    .ForMember(destination => destination.HasLTE, options=>
-                        options.MapFrom(source=>source.has_lte))
-                    .ForMember(destination => destination.Price, options=>
-                        options.MapFrom(source=>source.price))
-                    .ForMember(destination => destination.Motherboard, options=>
-                        options.MapFrom(source=>source.motherboard))
-                    .ForMember(destination => destination.VideoCard, options=>
-                        options.MapFrom(source=>source.video_card))
-                    .ForMember(destination => destination.ReleaseDate, options=>
-                        options.MapFrom(source=>source.release_date));
-            }));
+            
+            IEnumerable<Computer>? computersSystem = System.Text.Json.JsonSerializer.Deserialize<IEnumerable<Computer>>(computersJSON);
 
-            IEnumerable<ComputerSnake>? computersSystem = System.Text.Json.JsonSerializer.Deserialize<IEnumerable<ComputerSnake>>(computersJSON);
+            // IEnumerable<ComputerSnake>? computersSystem = System.Text.Json.JsonSerializer.Deserialize<IEnumerable<ComputerSnake>>(computersJSON);
             if(computersSystem != null)
             {
-                IEnumerable<Computer> computerResult = mapper.Map<IEnumerable<Computer>>(computersSystem);
-                foreach(Computer computer in computerResult)
+                foreach(Computer computer in computersSystem)
                 {
                     Console.WriteLine(computer.Motherboard);
                 }
             }
-        //     IEnumerable<Computer>? computersNewtonsoft = JsonConvert.DeserializeObject<IEnumerable<Computer>>(computersJSON); //newtonsoft
 
         //     if(computersNewtonsoft != null)
         //     {
