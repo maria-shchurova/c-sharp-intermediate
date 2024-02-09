@@ -45,24 +45,44 @@ namespace HelloWorld
             };
 
             //IEnumerable<Computer>? computers = JsonSerializer.Deserialize<IEnumerable<Computer>>(computersJSON, options); //System.Text.Json
-            IEnumerable<Computer>? computers = JsonConvert.DeserializeObject<IEnumerable<Computer>>(computersJSON); //newtonsoft
+            IEnumerable<Computer>? computersNewtonsoft = JsonConvert.DeserializeObject<IEnumerable<Computer>>(computersJSON); //newtonsoft
 
-            if(computers != null)
+            if(computersNewtonsoft != null)
             {
-                foreach(Computer computer in computers)
+                foreach(Computer computer in computersNewtonsoft)
                 {
-                    // Console.WriteLine(computer.Motherboard);
+                    string sql = @"INSERT INTO TutorialAppSchema.Computer (
+                                    Motherboard,
+                                    HasWifi,
+                                    HasLTE,
+                                    ReleaseDate,
+                                    Price,
+                                    VideoCard
+                                ) VALUES ('" + EscapeSingleQuote(computer.Motherboard)
+                                            +  "' , '" + computer.HasWifi
+                                            +  "' , '" + computer.HasLTE
+                                            +  "' , '" + computer.ReleaseDate
+                                            +  "' , '" + computer.Price
+                                            +  "' , '" + EscapeSingleQuote(computer.VideoCard)
+                                + "')";
+
+                                dapper.ExecuteSql(sql);
                 }
             }
 
             JsonSerializerSettings settings = new JsonSerializerSettings(){
                 ContractResolver = new CamelCasePropertyNamesContractResolver()
             };
-            string computersCopyNewtonsoft = JsonConvert.SerializeObject(computers, settings);//newtonsoft
+            string computersCopyNewtonsoft = JsonConvert.SerializeObject(computersNewtonsoft, settings);//newtonsoft
             File.WriteAllText("computersCopyNewtonsoft.txt", computersCopyNewtonsoft);
 
-            string computersCopySystem = System.Text.Json.JsonSerializer.Serialize(computers, options);//System.Text.Json
+            string computersCopySystem = System.Text.Json.JsonSerializer.Serialize(computersNewtonsoft, options);//System.Text.Json
             File.WriteAllText("computersCopySystem.txt", computersCopySystem);
+
+            static string EscapeSingleQuote(string input)
+            {
+                return input.Replace("'", "''");
+            }
 
         }
     }
