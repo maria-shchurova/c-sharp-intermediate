@@ -3,6 +3,7 @@ using HelloWorld.Data;
 using Microsoft.Extensions.Configuration;
 using System.Text.Json;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Serialization;
 
 namespace HelloWorld 
 {
@@ -50,9 +51,19 @@ namespace HelloWorld
             {
                 foreach(Computer computer in computers)
                 {
-                     Console.WriteLine(computer.Motherboard);
+                    // Console.WriteLine(computer.Motherboard);
                 }
             }
+
+            JsonSerializerSettings settings = new JsonSerializerSettings(){
+                ContractResolver = new CamelCasePropertyNamesContractResolver()
+            };
+            string computersCopyNewtonsoft = JsonConvert.SerializeObject(computers, settings);//newtonsoft
+            File.WriteAllText("computersCopyNewtonsoft.txt", computersCopyNewtonsoft);
+
+            string computersCopySystem = System.Text.Json.JsonSerializer.Serialize(computers, options);//System.Text.Json
+            File.WriteAllText("computersCopySystem.txt", computersCopySystem);
+
         }
     }
 }
