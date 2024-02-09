@@ -1,6 +1,9 @@
+using System.Text.Json.Serialization;
+using Newtonsoft.Json;
+
 namespace HelloWorld.Models
 {
-        public class Computer
+    public class Computer
     {
         public int ComputerId {get; set;}
         public string Motherboard {get; set;} = "";
