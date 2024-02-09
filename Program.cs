@@ -1,6 +1,8 @@
 ﻿using HelloWorld.Models;
 using HelloWorld.Data;
 using Microsoft.Extensions.Configuration;
+using System.Text.Json;
+using Newtonsoft.Json;
 
 namespace HelloWorld 
 {
@@ -13,84 +15,44 @@ namespace HelloWorld
                 .Build();
 
             DataContextDapper dapper = new DataContextDapper(config);
-            DataContextEF entityFramework = new DataContextEF(config);
 
+            // string sql = @"INSERT INTO TutorialAppSchema.Computer (
+            //     Motherboard,
+            //     HasWifi,
+            //     HasLTE,
+            //     ReleaseDate,
+            //     Price,
+            //     VideoCard
+            // ) VALUES ('" + myComputer.Motherboard 
+            //             +  "' , '" + myComputer.HasWifi
+            //              +  "' , '" + myComputer.HasLTE
+            //               +  "' , '" + myComputer.ReleaseDate
+            //                +  "' , '" + myComputer.Price
+            //                 +  "' , '" + myComputer.VideoCard
+            // + "')";
+            
+            // File.WriteAllText("log.txt", "\n" + sql + "\n");
+            // using StreamWriter openFile = new("log.txt", append: true);
+            // openFile.WriteLine("\n" + sql + "\n");
+            // openFile.Close();
 
-            DateTime rightNow = dapper.LoadDataSingle<DateTime>("SELECT GETDATE()");
-
-            Computer myComputer = new Computer()
+            string computersJSON = File.ReadAllText("Computers.json");
+            //Console.WriteLine(computersJSON);
+            JsonSerializerOptions options = new JsonSerializerOptions()
             {
-                Motherboard = "RIJND1111",
-                HasWifi = true,
-                HasLTE = false,
-                ReleaseDate = DateTime.Now,
-                Price = 999.67m,
-                VideoCard = "GTX1040"
+                PropertyNamingPolicy = JsonNamingPolicy.CamelCase
             };
 
-            entityFramework.Add(myComputer);
-            entityFramework.SaveChanges();
+            //IEnumerable<Computer>? computers = JsonSerializer.Deserialize<IEnumerable<Computer>>(computersJSON, options); //System.Text.Json
+            IEnumerable<Computer>? computers = JsonConvert.DeserializeObject<IEnumerable<Computer>>(computersJSON); //newtonsoft
 
-            string sql = @"INSERT INTO TutorialAppSchema.Computer (
-                Motherboard,
-                HasWifi,
-                HasLTE,
-                ReleaseDate,
-                Price,
-                VideoCard
-            ) VALUES ('" + myComputer.Motherboard 
-                        +  "' , '" + myComputer.HasWifi
-                         +  "' , '" + myComputer.HasLTE
-                          +  "' , '" + myComputer.ReleaseDate
-                           +  "' , '" + myComputer.Price
-                            +  "' , '" + myComputer.VideoCard
-            + "')";
-            
-            bool result = dapper.ExecuteSql(sql);
-
-
-            string sqlSelect = @"SELECT 
-                Computer.ComputerId,
-                Computer.Motherboard,
-                Computer.HasWifi,
-                Computer.HasLTE,
-                Computer.ReleaseDate,
-                Computer.Price,
-                Computer.VideoCard   
-                FROM TutorialAppSchema.Computer";
-            IEnumerable<Computer> computers = dapper.LoadData<Computer>(sqlSelect);
-            Console.WriteLine("'ComputerId','Motherboard','HasWifi','HasLTE','ReleaseDate'" + ",'Price','VideoCard'");
-            foreach(Computer singleComputer in computers)
+            if(computers != null)
             {
-                Console.WriteLine("'" + singleComputer.ComputerId 
-                        +  "' , '" + singleComputer.Motherboard
-                        +  "' , '" + singleComputer.HasWifi
-                        +  "' , '" + singleComputer.HasLTE
-                        +  "' , '" + singleComputer.ReleaseDate
-                        +  "' , '" + singleComputer.Price
-                        +  "' , '" + singleComputer.VideoCard
-            + "'");
-            }
-
-
-            IEnumerable<Computer>? computersEF = entityFramework.Computer?.ToList<Computer>();
-            if(computersEF != null)
-            {
-                 Console.WriteLine("'ComputerId','Motherboard','HasWifi','HasLTE','ReleaseDate'" 
-                    + ",'Price','VideoCard'");
-                foreach(Computer singleComputer in computersEF)
+                foreach(Computer computer in computers)
                 {
-                 Console.WriteLine("'" + singleComputer.ComputerId 
-                        +  "' , '" + singleComputer.Motherboard
-                        +  "' , '" + singleComputer.HasWifi
-                        +  "' , '" + singleComputer.HasLTE
-                        +  "' , '" + singleComputer.ReleaseDate
-                        +  "' , '" + singleComputer.Price
-                        +  "' , '" + singleComputer.VideoCard
-            + "'");
+                     Console.WriteLine(computer.Motherboard);
                 }
             }
-
         }
     }
 }

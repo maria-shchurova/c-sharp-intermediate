@@ -1,0 +1,19 @@
+
+INSERT INTO TutorialAppSchema.Computer (
+                Motherboard,
+                HasWifi,
+                HasLTE,
+                ReleaseDate,
+                Price,
+                VideoCard
+            ) VALUES ('RIJND1111' , 'True' , 'False' , '09-Feb-24 1:45:54 PM' , '999.67' , 'GTX1040')
+
+INSERT INTO TutorialAppSchema.Computer (
+                Motherboard,
+                HasWifi,
+                HasLTE,
+                ReleaseDate,
+                Price,
+                VideoCard
+            ) VALUES ('RIJND1111' , 'True' , 'False' , '09-Feb-24 1:45:54 PM' , '999.67' , 'GTX1040')
+
